@@ -94,7 +94,7 @@ class HabitoController {
     /**
      * ROTA DE EXCLUSÃO (/excluir/{id})
      */
-    @GetMapping("/excluir/{id}")
+    @PostMapping("/excluir/{id}")
     fun excluirHabito(@PathVariable("id") id: Long): String {
         checkInRepositorio.deleteAllByHabitoId(id)
         repositorio.deleteById(id)
