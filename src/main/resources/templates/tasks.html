@@ -4,289 +4,422 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habitu | Kawasaki</title>
+    <meta name="theme-color" content="#0f3d2e">
 
-    <!-- Framework CSS Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Ícones Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <!-- Fonte Google Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
 
     <style>
+        /* ===== Identidade Habitu =====
+           Verde-floresta = o chão onde o hábito cresce.
+           Lima = o que você fez hoje (check, XP, conquista).
+           Cada check-in vale 10 XP e cada segmento da barra é um check-in. */
         :root {
-            --red-primary: #dc2626;
-            --red-hover: #b91c1c;
-            --red-light: #fef2f2;
-            --text-dark: #1e293b;
-            --bg-body: #f8fafc;
+            --ground: #f2f4ee;
+            --surface: #ffffff;
+            --ink: #10211a;
+            --ink-soft: #4b5a52;
+            --forest: #0f3d2e;
+            --forest-deep: #0a2b20;
+            --forest-soft: #1d5a45;
+            --lime: #c4f24a;
+            --lime-press: #aedb35;
+            --danger: #b3261e;
+            --step: #e6e9e1;
+
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
         }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html { -webkit-text-size-adjust: 100%; }
 
         body {
-            background-color: var(--bg-body);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow-x: hidden;
+            margin: 0;
+            font-family: var(--font);
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--ink);
+            background: var(--ground);
         }
 
-        /* --- ANIMAÇÃO DE FUNDO (ESFERAS FLUTUANTES) --- */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
+        ::selection { background: var(--lime); color: var(--forest-deep); }
 
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(220, 38, 38, 0.08);
-            animation: floatUp 15s infinite linear;
-        }
-
-        .bubble:nth-child(1) { width: 180px; height: 180px; left: 10%; animation-duration: 18s; }
-        .bubble:nth-child(2) { width: 280px; height: 280px; left: 70%; animation-duration: 22s; animation-delay: -5s; }
-        .bubble:nth-child(3) { width: 120px; height: 120px; left: 40%; animation-duration: 14s; animation-delay: -8s; }
-        .bubble:nth-child(4) { width: 200px; height: 200px; left: 85%; animation-duration: 20s; animation-delay: -12s; }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(105vh) rotate(0deg);
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(-20vh) rotate(360deg);
-                opacity: 0.8;
-            }
-        }
-
-        /* --- ESTRUTURA DO CARTÃO E CONTEÚDO --- */
-        .main-wrapper {
-            flex: 1;
-        }
-
-        .main-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            background-color: #ffffff;
-        }
-
-        .app-header {
-            background-color: var(--red-primary);
-            color: #ffffff;
-            border-radius: 15px 15px 0 0;
-            padding: 1.5rem 2rem;
-        }
-
-        .badge-count {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .input-custom {
-            border: 1px solid #cbd5e1 !important;
-            border-radius: 8px 0 0 8px !important;
-            padding: 0.75rem 1rem;
-            color: var(--text-dark) !important;
-        }
-
-        .input-custom:focus {
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
-            border-color: var(--red-primary) !important;
-        }
-
-        .btn-red {
-            background-color: var(--red-primary);
-            border: none;
-            color: #ffffff;
-            font-weight: 600;
-            border-radius: 0 8px 8px 0;
-            padding: 0.75rem 1.5rem;
-        }
-
-        .btn-red:hover {
-            background-color: var(--red-hover);
-            color: #ffffff;
-        }
-
-        /* --- ESTILO ESTÁTICO DA LISTAGEM DE TAREFAS --- */
-        .task-item {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-left: 4px solid var(--red-primary);
-            border-radius: 8px !important;
-        }
-
-        .task-item.completed {
-            border-left-color: #10b981;
-            background-color: #f8fafc;
-        }
-
-        .task-title-completed {
-            text-decoration: line-through;
-            color: #94a3b8;
-        }
-
-        .btn-action-delete {
-            color: #ef4444;
-        }
-
-        .btn-action-delete:hover {
-            background-color: #fef2f2;
-            color: #dc2626;
+        :focus-visible {
+            outline: 3px solid var(--forest);
+            outline-offset: 3px;
             border-radius: 6px;
         }
+        .painel :focus-visible { outline-color: var(--lime); }
 
-        /* --- FOOTER KAWASAKI --- */
-        footer {
-            background-color: #ffffff;
-            border-top: 1px solid #e2e8f0;
-            padding: 1.25rem 0;
-            margin-top: 3rem;
+        h1, h2, p { margin: 0; }
+
+        /* ===== Moldura: painel verde + coluna de hábitos ===== */
+        .app {
+            display: grid;
+            grid-template-columns: minmax(340px, 5fr) 7fr;
+            min-height: 100vh;
         }
 
-        .footer-brand {
-            font-weight: 700;
-            color: var(--red-primary);
+        /* ---------- Painel (nível, XP, conquistas) ---------- */
+        .painel {
+            background: var(--forest);
+            color: #f2f4ee;
+            padding: 40px 32px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .painel-interno {
+            position: sticky;
+            top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 460px;
+            margin-left: auto;
+            width: 100%;
+        }
+
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+        .marca-selo {
+            width: 36px;
+            height: 36px;
+            background: var(--lime);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+        }
+        .marca-selo svg { width: 22px; height: 22px; }
+
+        .nivel-rotulo { font-size: 1.125rem; font-weight: 600; color: #cfe3d8; }
+        .nivel-numero {
+            font-size: clamp(6rem, 14vw, 9.5rem);
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            line-height: 0.85;
+            color: var(--lime);
+            margin-top: 8px;
+        }
+
+        /* Barra de XP em 10 segmentos: 1 segmento = 1 check-in = 10 XP */
+        .xp { display: flex; flex-direction: column; gap: 12px; }
+        .xp-texto {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        .xp-texto small { color: #cfe3d8; font-weight: 400; font-size: 1rem; }
+        .segmentos { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
+        .segmento {
+            height: 16px;
+            border-radius: 5px;
+            background: var(--forest-soft);
+            transition: background-color 300ms var(--ease-out), transform 300ms var(--ease-out);
+        }
+        .segmento.cheio { background: var(--lime); }
+
+        .hoje-resumo {
+            background: var(--forest-deep);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+        .hoje-resumo strong { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--lime); }
+        .hoje-resumo span { color: #cfe3d8; font-size: 1.0625rem; }
+
+        .conquistas-titulo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
+        .conquistas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .conquista {
+            border-radius: 14px;
+            padding: 14px 16px;
+            background: var(--forest-deep);
+            color: #9db8aa;
+            transition: transform 200ms var(--ease-out);
+        }
+        .conquista strong { display: block; font-size: 1rem; font-weight: 600; line-height: 1.25; }
+        .conquista span { display: block; font-size: 0.875rem; line-height: 1.35; margin-top: 4px; }
+        .conquista.ativa { background: var(--lime); color: var(--forest-deep); }
+
+        /* ---------- Coluna de hábitos ---------- */
+        .principal { padding: 40px 32px 32px; }
+        .principal-interno { max-width: 640px; margin-right: auto; width: 100%; }
+
+        .cabecalho { margin-bottom: 32px; }
+        .cabecalho h1 {
+            font-size: clamp(2.5rem, 5vw, 3.75rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            text-wrap: balance;
+        }
+        .cabecalho p { margin-top: 12px; font-size: 1.125rem; color: var(--ink-soft); max-width: 36ch; }
+
+        .novo { display: flex; gap: 10px; margin-bottom: 32px; }
+        .novo label {
+            position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+        }
+        .novo input {
+            flex: 1;
+            min-width: 0;
+            font: inherit;
+            font-size: 1.125rem;
+            color: var(--ink);
+            background: var(--surface);
+            border: 0;
+            border-radius: 14px;
+            padding: 18px 20px;
+            transition: background-color 160ms ease;
+        }
+        .novo input::placeholder { color: #7b887f; }
+        .novo input:focus { outline: 3px solid var(--forest); outline-offset: 0; }
+
+        .botao {
+            font: inherit;
+            font-weight: 600;
+            font-size: 1.0625rem;
+            border: 0;
+            border-radius: 14px;
+            padding: 0 24px;
+            min-height: 56px;
+            background: var(--forest);
+            color: #fff;
+            cursor: pointer;
+            transition: transform 160ms var(--ease-out), background-color 160ms ease;
+        }
+        .botao:active { transform: scale(0.97); }
+
+        .lista { display: flex; flex-direction: column; gap: 12px; padding: 0; margin: 0; list-style: none; }
+
+        .habito {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface);
+            border-radius: 18px;
+            padding: 14px 16px 14px 14px;
+            transition: background-color 250ms var(--ease-out);
+        }
+        .habito.feito { background: var(--lime); }
+
+        .check-form { margin: 0; }
+        .check {
+            width: 56px;
+            height: 56px;
+            border: 0;
+            border-radius: 16px;
+            background: var(--step);
+            color: transparent;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-out), color 200ms var(--ease-out);
+        }
+        .check svg { width: 28px; height: 28px; }
+        .check:active { transform: scale(0.94); }
+        .habito.feito .check { background: var(--forest); color: var(--lime); }
+
+        .habito-nome {
+            font-size: 1.1875rem;
+            font-weight: 600;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+            overflow-wrap: anywhere;
+        }
+        .habito-desde { display: block; font-size: 0.875rem; font-weight: 400; color: var(--ink-soft); margin-top: 2px; }
+        .habito.feito .habito-desde { color: var(--forest); }
+
+        .sequencia { text-align: right; line-height: 1; }
+        .sequencia strong { display: block; font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; }
+        .sequencia span { font-size: 0.875rem; color: var(--ink-soft); }
+        .habito.feito .sequencia span { color: var(--forest); }
+
+        .excluir-form { margin: 0; }
+        .excluir {
+            width: 44px;
+            height: 44px;
+            border: 0;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--ink-soft);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: transform 160ms var(--ease-out), color 160ms ease, background-color 160ms ease;
+        }
+        .excluir svg { width: 22px; height: 22px; }
+        .excluir:active { transform: scale(0.94); }
+        .habito.feito .excluir { color: var(--forest); }
+
+        @media (hover: hover) and (pointer: fine) {
+            .botao:hover { background: var(--forest-soft); }
+            .check:hover { background: #d6dbcf; }
+            .habito.feito .check:hover { background: var(--forest-soft); }
+            .excluir:hover { color: var(--danger); background: rgba(179, 38, 30, 0.1); }
+            .conquista:hover { transform: translateY(-2px); }
+        }
+
+        /* Estado vazio: convida a criar o primeiro hábito */
+        .vazio {
+            background: var(--surface);
+            border-radius: 18px;
+            padding: 40px 28px;
+        }
+        .vazio h2 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+        .vazio p { margin-top: 10px; color: var(--ink-soft); font-size: 1.0625rem; max-width: 38ch; }
+
+        .rodape { margin-top: 48px; color: var(--ink-soft); font-size: 0.9375rem; }
+        .rodape strong { color: var(--ink); font-weight: 600; }
+
+        /* ===== Entrada das partes (uma vez, sem esconder conteúdo se faltar JS/animação) ===== */
+        @keyframes subir {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .entra { animation: subir 500ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 70ms); }
+
+        /* ===== Celular: uma coluna, painel vira cabeçalho ===== */
+        @media (max-width: 860px) {
+            .app { grid-template-columns: 1fr; }
+            .principal { order: -1; }
+            .painel { padding: 24px 16px 24px; gap: 28px; }
+            .painel-interno { position: static; gap: 28px; max-width: none; margin: 0; }
+            .nivel-numero { font-size: 6.5rem; }
+            .principal { padding: 28px 16px 24px; }
+            .principal-interno { max-width: none; margin: 0; }
+            .conquistas { grid-template-columns: 1fr 1fr; }
+            .habito { grid-template-columns: auto 1fr auto; gap: 12px; }
+            .habito .excluir-form { grid-column: 3; grid-row: 1; }
+            .habito .sequencia { grid-column: 2 / 4; grid-row: 2; text-align: left; display: flex; align-items: baseline; gap: 8px; }
+            .habito .sequencia strong { font-size: 1.5rem; }
+            .novo { flex-direction: column; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .entra { animation: none; }
+            *, *::before, *::after { transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
 <body>
+<div class="app">
 
-<!-- Fundo Animado com Esferas CSS -->
-<div class="bg-animation">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-</div>
+    <!-- ===== Painel: marca, nível, XP, conquistas ===== -->
+    <aside class="painel">
+        <div class="painel-interno">
+            <div class="marca entra" style="--i:0">
+                <span class="marca-selo" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#0a2b20" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 6"/></svg>
+                </span>
+                Habitu
+            </div>
 
-<div class="main-wrapper py-5">
-    <div class="container" style="max-width: 650px;">
+            <div class="entra" style="--i:1">
+                <div class="nivel-rotulo">Nível</div>
+                <div class="nivel-numero" th:text="${nivel}">1</div>
+            </div>
 
-        <!-- Cartão Principal -->
-        <div class="card main-card">
-
-            <!-- Cabeçalho Vermelho -->
-            <div class="app-header d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <i class="bi bi-check2-square fs-3"></i>
-                        <h3 class="m-0 fw-bold">Meus Hábitos</h3>
-                    </div>
-                    <small class="opacity-75">Organização simples e eficiente</small>
-                    <div class="mt-2" style="min-width: 220px;">
-                        <div class="d-flex justify-content-between small fw-semibold">
-                            <span>Nível <span th:text="${nivel}">1</span></span>
-                            <span><span th:text="${xpNoNivel}">0</span> / 100 XP</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-light" role="progressbar"
-                                 th:style="'width:' + ${xpNoNivel} + '%'"></div>
-                        </div>
-                    </div>
+            <div class="xp entra" style="--i:2">
+                <div class="xp-texto">
+                    <span><span th:text="${xpNoNivel}">0</span> de 100 XP</span>
+                    <small>cada check-in vale 10</small>
                 </div>
-
-                <div class="badge-count">
-                    <span th:text="${#lists.size(habitos)}">0</span> Hábito(s)
+                <div class="segmentos" role="img"
+                     th:attr="aria-label=${xpNoNivel} + ' de 100 XP neste nível'">
+                    <span class="segmento" th:each="i : ${#numbers.sequence(0, 9)}"
+                          th:classappend="${i * 10 < xpNoNivel} ? 'cheio'"></span>
                 </div>
             </div>
 
-            <div class="card-body p-4">
-
-                <!-- Form para Adicionar Tarefa -->
-                <form th:action="@{/cadastrar}" th:object="${novoHabito}" method="post" class="mb-4">
-                    <div class="input-group">
-                        <input type="text"
-                               th:field="*{nome}"
-                               class="form-control input-custom"
-                               placeholder="Digite um novo hábito..."
-                               required>
-                        <button class="btn btn-red" type="submit">
-                            <i class="bi bi-plus-lg me-1"></i> Adicionar
-                        </button>
-                    </div>
-                </form>
-
-                <hr class="my-4 text-muted opacity-25">
-
-                <!-- Conquistas -->
-                <h6 class="fw-bold mb-2">Conquistas</h6>
-                <div class="d-flex flex-wrap gap-2 mb-4">
-                    <span th:each="c : ${conquistas}"
-                          class="badge text-start"
-                          th:classappend="${c.desbloqueada} ? 'bg-success' : 'bg-secondary opacity-50'"
-                          th:title="${c.descricao}">
-                        <span th:text="${c.nome}">Nome</span><br>
-                        <small class="fw-normal" th:text="${c.descricao}">Descrição</small>
-                    </span>
-                </div>
-
-                <hr class="my-4 text-muted opacity-25">
-
-                <!-- Lista de Tarefas (Padrão Estático) -->
-                <div class="d-flex flex-column gap-2">
-                    <div th:each="habito : ${habitos}"
-                         class="list-group-item d-flex align-items-center justify-content-between p-3 task-item">
-
-                        <div class="d-flex align-items-center me-3">
-                            <form th:action="@{/checkin/{id}(id=${habito.id})}" method="post" class="me-3 m-0">
-                                <button type="submit" class="btn p-0 border-0 bg-transparent">
-                                    <i th:class="${feitosHoje.contains(habito.id)} ? 'bi bi-check-circle-fill text-success fs-4' : 'bi bi-circle text-secondary fs-4'"></i>
-                                </button>
-                            </form>
-                            <span th:text="${habito.nome}" class="fs-6 text-break fw-medium text-dark">Nome do Hábito</span>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="fw-semibold" title="Sequência de dias">🔥 <span th:text="${sequencias[habito.id]}">0</span></span>
-                            <small class="text-muted" th:text="${#temporals.format(habito.criadoEm, 'dd/MM/yyyy')}">01/01/2026</small>
-                            <form th:action="@{/excluir/{id}(id=${habito.id})}" method="post" class="m-0">
-                                <button type="submit" class="btn btn-sm btn-action-delete border-0 p-1" aria-label="Excluir hábito">
-                                    <i class="bi bi-trash3 fs-5"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Estado Vazio -->
-                    <div th:if="${#lists.isEmpty(habitos)}" class="text-center py-5 text-muted">
-                        <i class="bi bi-inbox display-3 d-block mb-2 text-danger opacity-50"></i>
-                        <h5 class="fw-semibold text-dark">Nenhum hábito encontrado!</h5>
-                        <p class="mb-0 fs-6">Adicione um hábito no campo acima para começar.</p>
-                    </div>
-                </div>
-
+            <div class="hoje-resumo entra" style="--i:3">
+                <strong th:text="${feitosHoje.size()}">0</strong>
+                <span>de <span th:text="${#lists.size(habitos)}">0</span> hábitos feitos hoje</span>
             </div>
+
+            <section class="entra" style="--i:4" aria-labelledby="titulo-conquistas">
+                <h2 class="conquistas-titulo" id="titulo-conquistas">Conquistas</h2>
+                <div class="conquistas">
+                    <div class="conquista" th:each="c : ${conquistas}"
+                         th:classappend="${c.desbloqueada} ? 'ativa'">
+                        <strong th:text="${c.nome}">Nome</strong>
+                        <span th:text="${c.descricao}">Descrição</span>
+                    </div>
+                </div>
+            </section>
         </div>
-    </div>
+    </aside>
+
+    <!-- ===== Coluna principal: hábitos de hoje ===== -->
+    <main class="principal">
+        <div class="principal-interno">
+
+            <header class="cabecalho entra" style="--i:1">
+                <h1>Hoje, um passo de cada vez</h1>
+                <p>Marque o que você fez. A sequência cresce enquanto você não falha um dia.</p>
+            </header>
+
+            <form th:action="@{/cadastrar}" th:object="${novoHabito}" method="post" class="novo entra" style="--i:2">
+                <label for="nome">Novo hábito</label>
+                <input type="text" id="nome" th:field="*{nome}" placeholder="Ex.: caminhar 20 minutos" maxlength="80" required>
+                <button class="botao" type="submit">Adicionar hábito</button>
+            </form>
+
+            <ul class="lista">
+                <li class="habito entra" th:each="habito, stat : ${habitos}"
+                    th:classappend="${feitosHoje.contains(habito.id)} ? 'feito'"
+                    th:style="'--i:' + ${stat.index + 3}">
+
+                    <form th:action="@{/checkin/{id}(id=${habito.id})}" method="post" class="check-form">
+                        <button type="submit" class="check"
+                                th:attr="aria-label=${feitosHoje.contains(habito.id) ? 'Desfazer check-in de ' + habito.nome : 'Marcar como feito: ' + habito.nome}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l5 5L20 6"/></svg>
+                        </button>
+                    </form>
+
+                    <div>
+                        <div class="habito-nome" th:text="${habito.nome}">Nome do hábito</div>
+                        <small class="habito-desde">desde <span th:text="${#temporals.format(habito.criadoEm, 'dd/MM/yyyy')}">01/01/2026</span></small>
+                    </div>
+
+                    <div class="sequencia" title="Dias seguidos">
+                        <strong th:text="${sequencias[habito.id]}">0</strong>
+                        <span>dias seguidos</span>
+                    </div>
+
+                    <form th:action="@{/excluir/{id}(id=${habito.id})}" method="post" class="excluir-form"
+                          onsubmit="return confirm('Excluir este hábito e todo o histórico dele?');">
+                        <button type="submit" class="excluir" th:attr="aria-label='Excluir ' + ${habito.nome}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+
+            <!-- Estado vazio -->
+            <div class="vazio entra" style="--i:3" th:if="${#lists.isEmpty(habitos)}">
+                <h2>Seu primeiro hábito começa aqui.</h2>
+                <p>Escolha algo pequeno, como beber água ou ler 10 páginas, e adicione acima. O primeiro check-in já desbloqueia uma conquista.</p>
+            </div>
+
+            <p class="rodape">
+                Feito por <strong>Kauan Kawasaki</strong>, 2026. Projeto em Kotlin, Spring Boot e MySQL.
+            </p>
+        </div>
+    </main>
 </div>
-
-<!-- Rodapé Kawasaki -->
-<footer class="text-center">
-    <div class="container">
-        <p class="mb-0 text-slate-600 fs-6">
-            Desenvolvido por <span class="footer-brand">Kauan Kawasaki</span> &copy; 2026
-        </p>
-        <small class="text-muted" style="font-size: 0.75rem;">
-            Projeto Spring Boot, Kotlin, JPA e Thymeleaf
-        </small>
-    </div>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
