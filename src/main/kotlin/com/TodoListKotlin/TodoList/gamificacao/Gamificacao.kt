@@ -2,6 +2,8 @@ package com.TodoListKotlin.TodoList.gamificacao
 
 import java.time.LocalDate
 
+data class Conquista(val nome: String, val descricao: String, val desbloqueada: Boolean)
+
 /**
  * Regras de XP e nível, calculadas a partir do total de check-ins (sem Spring, fácil de testar).
  */
@@ -28,4 +30,12 @@ object Gamificacao {
         }
         return total
     }
+
+    fun conquistas(totalCheckIns: Long, maiorSequencia: Int, nivel: Long): List<Conquista> = listOf(
+        Conquista("Primeiro passo", "Faça seu primeiro check-in", totalCheckIns >= 1),
+        Conquista("Pegando o ritmo", "Faça 10 check-ins", totalCheckIns >= 10),
+        Conquista("Semana de fogo", "Mantenha uma sequência de 7 dias", maiorSequencia >= 7),
+        Conquista("Mês imbatível", "Mantenha uma sequência de 30 dias", maiorSequencia >= 30),
+        Conquista("Nível 5", "Chegue ao nível 5", nivel >= 5)
+    )
 }

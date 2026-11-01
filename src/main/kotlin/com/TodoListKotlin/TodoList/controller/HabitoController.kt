@@ -51,6 +51,10 @@ class HabitoController {
         model.addAttribute("xp", xp)
         model.addAttribute("nivel", Gamificacao.nivel(xp))
         model.addAttribute("xpNoNivel", Gamificacao.xpNoNivel(xp))
+
+        val nivel = Gamificacao.nivel(xp)
+        val maiorSequencia = sequencias.values.maxOrNull() ?: 0
+        model.addAttribute("conquistas", Gamificacao.conquistas(checkInRepositorio.count(), maiorSequencia, nivel))
         return "tasks"
     }
 

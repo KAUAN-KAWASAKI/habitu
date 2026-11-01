@@ -222,6 +222,20 @@
 
                 <hr class="my-4 text-muted opacity-25">
 
+                <!-- Conquistas -->
+                <h6 class="fw-bold mb-2">Conquistas</h6>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span th:each="c : ${conquistas}"
+                          class="badge text-start"
+                          th:classappend="${c.desbloqueada} ? 'bg-success' : 'bg-secondary opacity-50'"
+                          th:title="${c.descricao}">
+                        <span th:text="${c.nome}">Nome</span><br>
+                        <small class="fw-normal" th:text="${c.descricao}">Descrição</small>
+                    </span>
+                </div>
+
+                <hr class="my-4 text-muted opacity-25">
+
                 <!-- Lista de Tarefas (Padrão Estático) -->
                 <div class="d-flex flex-column gap-2">
                     <div th:each="habito : ${habitos}"
