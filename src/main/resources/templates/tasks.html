@@ -187,6 +187,16 @@
                         <h3 class="m-0 fw-bold">Meus Hábitos</h3>
                     </div>
                     <small class="opacity-75">Organização simples e eficiente</small>
+                    <div class="mt-2" style="min-width: 220px;">
+                        <div class="d-flex justify-content-between small fw-semibold">
+                            <span>Nível <span th:text="${nivel}">1</span></span>
+                            <span><span th:text="${xpNoNivel}">0</span> / 100 XP</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-light" role="progressbar"
+                                 th:style="'width:' + ${xpNoNivel} + '%'"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="badge-count">

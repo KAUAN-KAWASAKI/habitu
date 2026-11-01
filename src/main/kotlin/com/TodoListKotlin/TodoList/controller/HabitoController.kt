@@ -1,6 +1,7 @@
 package com.TodoListKotlin.TodoList.controller
 
 import com.TodoListKotlin.TodoList.model.Habito
+import com.TodoListKotlin.TodoList.gamificacao.Gamificacao
 import com.TodoListKotlin.TodoList.model.CheckIn
 import com.TodoListKotlin.TodoList.repository.CheckInRepository
 import com.TodoListKotlin.TodoList.repository.HabitoRepository
@@ -36,6 +37,11 @@ class HabitoController {
             "feitosHoje",
             checkInRepositorio.findAllByData(LocalDate.now()).map { it.habito!!.id }.toSet()
         )
+
+        val xp = Gamificacao.xpTotal(checkInRepositorio.count())
+        model.addAttribute("xp", xp)
+        model.addAttribute("nivel", Gamificacao.nivel(xp))
+        model.addAttribute("xpNoNivel", Gamificacao.xpNoNivel(xp))
         return "tasks"
     }
 
