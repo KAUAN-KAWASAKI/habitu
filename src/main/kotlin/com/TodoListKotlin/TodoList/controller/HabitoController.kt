@@ -36,7 +36,7 @@ class HabitoController {
         model.addAttribute("novoHabito", Habito())
         model.addAttribute(
             "feitosHoje",
-            checkInRepositorio.findAllByData(LocalDate.now()).map { it.habito!!.id }.toSet()
+            checkInRepositorio.findAllByData(LocalDate.now()).map { it.habito!!.id }.toHashSet()
         )
 
         val datasPorHabito = checkInRepositorio.findAll()
