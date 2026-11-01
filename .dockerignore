@@ -1,0 +1,9 @@
+build/
+.gradle/
+.idea/
+.git/
+.env*
+.kotlin/
+.serena/
+.claude/
+bin/
