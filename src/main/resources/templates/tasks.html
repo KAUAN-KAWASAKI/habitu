@@ -285,6 +285,22 @@
         .rodape { margin-top: 48px; color: var(--ink-soft); font-size: 0.9375rem; }
         .rodape strong { color: var(--ink); font-weight: 600; }
 
+
+        /* ===== Fito, o mascote: reage ao progresso do dia ===== */
+        .nivel-linha { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+        .fito-bloco { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 132px; flex: none; }
+        .fito { width: 132px; height: 132px; overflow: visible; transform-origin: 50% 90%; }
+        .fito-fala { font-size: 0.875rem; line-height: 1.3; color: #cfe3d8; text-align: center; min-height: 2.6em; }
+        .fito .olhos-fechados, .fito .boca-feliz, .fito .boca-festa, .fito .zzz, .fito .confete { display: none; }
+        .fito.dormindo .olhos-abertos { display: none; }
+        .fito.dormindo .olhos-fechados, .fito.dormindo .zzz { display: inline; }
+        .fito.feliz .boca-feliz { display: inline; }
+        .fito.festa .boca-festa, .fito.festa .confete { display: inline; }
+        .fito.dormindo .corpo { animation: respira 3.2s ease-in-out infinite; transform-origin: 50% 90%; }
+        .fito.festa { animation: pula 900ms var(--ease-out) 1; }
+        @keyframes respira { 50% { transform: scaleY(1.03); } }
+        @keyframes pula { 0% { transform: translateY(0); } 35% { transform: translateY(-14px); } 100% { transform: translateY(0); } }
+
         /* ===== Entrada das partes (uma vez, sem esconder conteúdo se faltar JS/animação) ===== */
         @keyframes subir {
             from { opacity: 0; transform: translateY(16px); }
@@ -299,6 +315,8 @@
             .painel { padding: 24px 16px 24px; gap: 28px; }
             .painel-interno { position: static; gap: 28px; max-width: none; margin: 0; }
             .nivel-numero { font-size: 6.5rem; }
+            .fito-bloco { width: 104px; }
+            .fito { width: 104px; height: 104px; }
             .principal { padding: 28px 16px 24px; }
             .principal-interno { max-width: none; margin: 0; }
             .conquistas { grid-template-columns: 1fr 1fr; }
@@ -311,6 +329,7 @@
 
         @media (prefers-reduced-motion: reduce) {
             .entra { animation: none; }
+            .fito, .fito .corpo { animation: none !important; }
             *, *::before, *::after { transition-duration: 0.01ms !important; }
         }
     </style>
@@ -328,9 +347,45 @@
                 Habitu
             </div>
 
-            <div class="entra" style="--i:1">
-                <div class="nivel-rotulo">Nível</div>
-                <div class="nivel-numero" th:text="${nivel}">1</div>
+            <div class="entra nivel-linha" style="--i:1">
+                <div>
+                    <div class="nivel-rotulo">Nível</div>
+                    <div class="nivel-numero" th:text="${nivel}">1</div>
+                </div>
+
+                <div class="fito-bloco">
+                    <svg class="fito" viewBox="0 0 200 200" role="img" aria-label="Fito, o mascote do Habitu"
+                         th:classappend="${habitos.isEmpty() or feitosHoje.isEmpty() ? 'dormindo' : (feitosHoje.size() >= habitos.size() ? 'festa' : 'feliz')}">
+                        <ellipse cx="100" cy="184" rx="50" ry="8" fill="#0a2b20"/>
+                        <g class="corpo">
+                            <path d="M150 150C190 150 195 100 175 90C180 120 160 130 140 130Z" fill="#c4f24a"/>
+                            <path d="M175 90C183 98 186 108 184 118C176 112 174 100 175 90Z" fill="#f2f4ee"/>
+                            <path d="M60 60L52 18L88 44Z M140 60L148 18L112 44Z" fill="#c4f24a"/>
+                            <path d="M100 40C150 40 160 110 140 150C130 175 70 175 60 150C40 110 50 40 100 40Z" fill="#c4f24a"/>
+                            <path d="M60 112C80 110 90 140 100 150C110 140 120 110 140 112C145 140 125 168 100 170C75 168 55 140 60 112Z" fill="#f2f4ee"/>
+                            <g class="olhos-abertos">
+                                <circle cx="80" cy="96" r="8" fill="#0a2b20"/><circle cx="120" cy="96" r="8" fill="#0a2b20"/>
+                                <circle cx="83" cy="93" r="3" fill="#fff"/><circle cx="123" cy="93" r="3" fill="#fff"/>
+                            </g>
+                            <g class="olhos-fechados" fill="none" stroke="#0a2b20" stroke-width="5" stroke-linecap="round">
+                                <path d="M72 98Q80 104 88 98"/><path d="M112 98Q120 104 128 98"/>
+                            </g>
+                            <ellipse cx="100" cy="122" rx="8" ry="6" fill="#0a2b20"/>
+                            <path class="boca-feliz" d="M90 132Q100 142 110 132" fill="none" stroke="#0a2b20" stroke-width="4" stroke-linecap="round"/>
+                            <path class="boca-festa" d="M88 131Q100 154 112 131Z" fill="#0a2b20"/>
+                        </g>
+                        <g class="zzz" fill="#c4f24a" font-family="sans-serif" font-weight="800">
+                            <text x="140" y="44" font-size="26">z</text><text x="158" y="26" font-size="20">z</text>
+                        </g>
+                        <g class="confete">
+                            <rect x="30" y="30" width="10" height="10" rx="2" fill="#c4f24a" transform="rotate(20 35 35)"/>
+                            <rect x="165" y="52" width="10" height="10" rx="2" fill="#f2f4ee" transform="rotate(-15 170 57)"/>
+                            <circle cx="22" cy="86" r="5" fill="#f2f4ee"/><circle cx="178" cy="12" r="5" fill="#c4f24a"/>
+                        </g>
+                    </svg>
+                    <p class="fito-fala"
+                       th:text="${habitos.isEmpty() ? 'Crie um hábito e eu acordo.' : (feitosHoje.isEmpty() ? 'Zzz... vamos começar o dia?' : (feitosHoje.size() >= habitos.size() ? 'Dia completo! Você é demais.' : 'Boa! Falta pouco.'))}">Zzz... vamos começar o dia?</p>
+                </div>
             </div>
 
             <div class="xp entra" style="--i:2">
