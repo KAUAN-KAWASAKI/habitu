@@ -237,6 +237,7 @@
                         </div>
 
                         <div class="d-flex align-items-center gap-3">
+                            <span class="fw-semibold" title="Sequência de dias">🔥 <span th:text="${sequencias[habito.id]}">0</span></span>
                             <small class="text-muted" th:text="${#temporals.format(habito.criadoEm, 'dd/MM/yyyy')}">01/01/2026</small>
                             <a th:href="@{/excluir/{id}(id=${habito.id})}" class="btn btn-sm btn-action-delete border-0 p-1">
                                 <i class="bi bi-trash3 fs-5"></i>

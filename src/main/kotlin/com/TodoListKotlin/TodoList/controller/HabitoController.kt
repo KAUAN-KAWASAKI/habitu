@@ -31,12 +31,21 @@ class HabitoController {
      */
     @GetMapping("/home")
     fun abrirHome(model: Model): String {
-        model.addAttribute("habitos", repositorio.findAll())
+        val habitos = repositorio.findAll()
+        model.addAttribute("habitos", habitos)
         model.addAttribute("novoHabito", Habito())
         model.addAttribute(
             "feitosHoje",
             checkInRepositorio.findAllByData(LocalDate.now()).map { it.habito!!.id }.toSet()
         )
+
+        val datasPorHabito = checkInRepositorio.findAll()
+            .groupBy { it.habito!!.id }
+            .mapValues { entry -> entry.value.map { it.data }.toSet() }
+        val sequencias = habitos.associate {
+            it.id to Gamificacao.sequencia(datasPorHabito[it.id] ?: emptySet(), LocalDate.now())
+        }
+        model.addAttribute("sequencias", sequencias)
 
         val xp = Gamificacao.xpTotal(checkInRepositorio.count())
         model.addAttribute("xp", xp)
