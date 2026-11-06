@@ -10,7 +10,11 @@ import java.time.LocalDate
 interface CheckInRepository : JpaRepository<CheckIn, Long> {
     fun existsByHabitoIdAndData(habitoId: Long, data: LocalDate): Boolean
 
-    fun findAllByData(data: LocalDate): List<CheckIn>
+    fun findAllByHabitoUsuarioUsernameAndData(username: String, data: LocalDate): List<CheckIn>
+
+    fun findAllByHabitoUsuarioUsername(username: String): List<CheckIn>
+
+    fun countByHabitoUsuarioUsername(username: String): Long
 
     @Transactional
     fun deleteByHabitoIdAndData(habitoId: Long, data: LocalDate)
