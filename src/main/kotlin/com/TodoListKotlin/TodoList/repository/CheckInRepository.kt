@@ -14,8 +14,6 @@ interface CheckInRepository : JpaRepository<CheckIn, Long> {
 
     fun findAllByHabitoUsuarioUsername(username: String): List<CheckIn>
 
-    fun countByHabitoUsuarioUsername(username: String): Long
-
     @Transactional
     fun deleteByHabitoIdAndData(habitoId: Long, data: LocalDate)
 
