@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -284,6 +284,13 @@
 
         .rodape { margin-top: 48px; color: var(--ink-soft); font-size: 0.9375rem; }
         .rodape strong { color: var(--ink); font-weight: 600; }
+        .sessao { margin-top: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--ink-soft); font-size: 0.9375rem; }
+        .sessao form { margin: 0; }
+        .sair {
+            font: inherit; font-weight: 600; color: var(--forest);
+            background: none; border: 0; padding: 8px 4px; min-height: 44px;
+            text-decoration: underline; cursor: pointer;
+        }
 
 
         /* ===== Fito, o mascote: reage ao progresso do dia ===== */
@@ -532,6 +539,13 @@
             <div class="vazio entra" style="--i:3" th:if="${#lists.isEmpty(habitos)}">
                 <h2>Seu primeiro hábito começa aqui.</h2>
                 <p>Escolha algo pequeno, como beber água ou ler 10 páginas, e adicione acima. O primeiro check-in já desbloqueia uma conquista.</p>
+            </div>
+
+            <div class="sessao">
+                <span>Entrou como <strong th:text="${usuarioLogado}">usuario</strong></span>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="sair">Sair</button>
+                </form>
             </div>
 
             <p class="rodape">
