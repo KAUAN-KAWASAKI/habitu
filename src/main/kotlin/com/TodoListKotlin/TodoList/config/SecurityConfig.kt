@@ -21,8 +21,8 @@ class SecurityConfig {
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     /**
-     * Por enquanto libera todas as rotas, para o site continuar funcionando.
-     * A restrição de acesso (login) entra no próximo passo.
+     * Só /login e /registrar são públicos; o resto exige estar logado.
+     * O login usa a nossa página e o logout é um POST em /logout (protegido por CSRF).
      */
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -31,7 +31,16 @@ class SecurityConfig {
         val csrfHandler = CsrfTokenRequestAttributeHandler().apply { setCsrfRequestAttributeName(null) }
 
         http
-            .authorizeHttpRequests { it.anyRequest().permitAll() }
+            .authorizeHttpRequests {
+                it.requestMatchers("/login", "/registrar", "/error").permitAll()
+                    .anyRequest().authenticated()
+            }
+            .formLogin {
+                it.loginPage("/login")
+                    .defaultSuccessUrl("/home", true)
+                    .permitAll()
+            }
+            .logout { it.logoutSuccessUrl("/login?logout") }
             .csrf { it.csrfTokenRequestHandler(csrfHandler) }
         return http.build()
     }

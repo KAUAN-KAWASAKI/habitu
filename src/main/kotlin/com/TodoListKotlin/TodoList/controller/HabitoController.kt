@@ -11,6 +11,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import java.security.Principal
 import java.time.LocalDate
 
 /**
@@ -30,7 +31,8 @@ class HabitoController {
      * Carrega todos os hábitos e disponibiliza-os ao template HTML.
      */
     @GetMapping("/home")
-    fun abrirHome(model: Model): String {
+    fun abrirHome(model: Model, principal: Principal): String {
+        model.addAttribute("usuarioLogado", principal.name)
         val habitos = repositorio.findAll()
         model.addAttribute("habitos", habitos)
         model.addAttribute("novoHabito", Habito())
