@@ -37,7 +37,11 @@ Ele também pisca, abana o rabo, respira, e as pupilas seguem o mouse. Ao tocar 
 | :---: | :---: |
 | ![Habitu no celular](docs/img/celular.png) | ![Tela vazia](docs/img/tela-vazia.png) |
 
-Os prints são renders da própria interface com dados de exemplo.
+Login (a tela de cadastro segue o mesmo visual):
+
+![Tela de login](docs/img/tela-login.png)
+
+Os prints são da própria interface, com uma conta de exemplo.
 
 ## Tecnologias
 
