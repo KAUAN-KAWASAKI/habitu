@@ -39,6 +39,8 @@ class RegistroController(
         val erro = when {
             nome.length < 3 || nome.length > 30 -> "O nome de usuário precisa ter de 3 a 30 caracteres."
             senha.length < 6 -> "A senha precisa ter pelo menos 6 caracteres."
+            // O BCrypt só aceita até 72 bytes (letras com acento ocupam 2 bytes).
+            senha.toByteArray().size > 72 -> "A senha pode ter no máximo 72 caracteres."
             usuarioRepositorio.findByUsername(nome) != null -> "Esse nome de usuário já está em uso."
             else -> null
         }
