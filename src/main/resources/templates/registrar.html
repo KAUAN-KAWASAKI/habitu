@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta | Habitu</title>
+    <meta name="theme-color" content="#0f3d2e">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ground: #f2f4ee;
+            --surface: #ffffff;
+            --ink: #10211a;
+            --ink-soft: #4b5a52;
+            --forest: #0f3d2e;
+            --forest-soft: #1d5a45;
+            --lime: #c4f24a;
+            --danger: #b3261e;
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px 16px;
+            font-family: var(--font);
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--ink);
+            background: var(--ground);
+        }
+
+        :focus-visible { outline: 3px solid var(--forest); outline-offset: 3px; border-radius: 6px; }
+
+        main { width: 100%; max-width: 420px; }
+        h1 { margin: 0; font-size: clamp(2.25rem, 8vw, 3rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+        .sub { margin: 12px 0 28px; color: var(--ink-soft); font-size: 1.0625rem; }
+
+        form { display: flex; flex-direction: column; gap: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; }
+        input {
+            width: 100%;
+            font: inherit;
+            font-size: 1.125rem;
+            color: var(--ink);
+            background: var(--surface);
+            border: 0;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+        input:focus { outline: 3px solid var(--forest); outline-offset: 0; }
+        small { display: block; margin-top: 6px; color: var(--ink-soft); }
+
+        .botao {
+            font: inherit;
+            font-weight: 600;
+            font-size: 1.0625rem;
+            border: 0;
+            border-radius: 14px;
+            min-height: 56px;
+            background: var(--forest);
+            color: #fff;
+            cursor: pointer;
+            transition: transform 160ms var(--ease-out), background-color 160ms ease;
+        }
+        .botao:active { transform: scale(0.97); }
+        @media (hover: hover) and (pointer: fine) { .botao:hover { background: var(--forest-soft); } }
+
+        .aviso { margin: 0 0 20px; padding: 14px 16px; border-radius: 14px; font-weight: 600; }
+        .aviso.erro { background: rgba(179, 38, 30, 0.1); color: var(--danger); }
+        .aviso.ok { background: var(--lime); color: var(--forest); }
+
+        .voltar { display: inline-block; margin-top: 24px; color: var(--ink-soft); }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Criar conta</h1>
+    <p class="sub">Escolha um nome de usuário e uma senha para guardar seus hábitos.</p>
+
+    <p class="aviso erro" role="alert" th:if="${erro}" th:text="${erro}">Mensagem de erro</p>
+    <p class="aviso ok" role="status" th:if="${param.sucesso}">Conta criada com sucesso.</p>
+
+    <form th:action="@{/registrar}" method="post">
+        <div>
+            <label for="username">Nome de usuário</label>
+            <input type="text" id="username" name="username" th:value="${username}"
+                   minlength="3" maxlength="30" autocomplete="username" required>
+        </div>
+        <div>
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" minlength="6" maxlength="72" autocomplete="new-password" required>
+            <small>Pelo menos 6 caracteres.</small>
+        </div>
+        <button class="botao" type="submit">Criar conta</button>
+    </form>
+
+    <a class="voltar" th:href="@{/home}">Voltar para os hábitos</a>
+</main>
+</body>
+</html>
