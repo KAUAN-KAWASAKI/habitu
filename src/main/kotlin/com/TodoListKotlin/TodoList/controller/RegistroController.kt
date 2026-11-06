@@ -2,6 +2,7 @@ package com.TodoListKotlin.TodoList.controller
 
 import com.TodoListKotlin.TodoList.model.Usuario
 import com.TodoListKotlin.TodoList.repository.UsuarioRepository
+import com.TodoListKotlin.TodoList.validacao.ValidacaoCadastro
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Controller
@@ -36,14 +37,8 @@ class RegistroController(
     ): String {
         val nome = username.trim()
 
-        val erro = when {
-            nome.length < 3 || nome.length > 30 -> "O nome de usuário precisa ter de 3 a 30 caracteres."
-            senha.length < 6 -> "A senha precisa ter pelo menos 6 caracteres."
-            // O BCrypt só aceita até 72 bytes (letras com acento ocupam 2 bytes).
-            senha.toByteArray().size > 72 -> "A senha pode ter no máximo 72 caracteres."
-            usuarioRepositorio.findByUsername(nome) != null -> "Esse nome de usuário já está em uso."
-            else -> null
-        }
+        val erro = ValidacaoCadastro.validar(nome, senha)
+            ?: if (usuarioRepositorio.findByUsername(nome) != null) "Esse nome de usuário já está em uso." else null
         if (erro != null) return mostrarErro(model, nome, erro)
 
         try {

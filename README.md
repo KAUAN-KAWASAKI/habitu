@@ -6,12 +6,13 @@ App web de hábitos com gamificação, feito em **Kotlin e Spring Boot**. Você 
 
 **Demo no ar:** https://habitu-h3n8.onrender.com/
 
-> Aviso: o demo é público e compartilhado, então todo mundo vê os mesmos hábitos. Não cadastre dados pessoais. Ele roda no plano grátis do Render, que "dorme" quando fica parado, então o primeiro acesso pode demorar cerca de 30 segundos.
+> Para usar, crie a sua conta. Cada pessoa só vê e mexe nos próprios hábitos. Mesmo assim, é um projeto de estudo: não use uma senha que você usa em outros lugares nem cadastre dados pessoais. Ele roda no plano grátis do Render, que "dorme" quando fica parado, então o primeiro acesso pode demorar cerca de 30 segundos.
 
 ![Tela principal do Habitu](docs/img/tela-principal.png)
 
 ## O que o app faz
 
+- **Conta:** crie sua conta, entre e saia. Seus hábitos, XP e conquistas são só seus.
 - **Hábitos:** cadastre e exclua hábitos.
 - **Check-in diário:** marque o que você fez hoje (e desmarque, se errou).
 - **XP e nível:** cada check-in vale **10 XP** e a cada **100 XP** você sobe de nível. A barra de XP tem 10 segmentos, um para cada check-in.
@@ -41,9 +42,10 @@ Os prints são renders da própria interface com dados de exemplo.
 ## Tecnologias
 
 - Kotlin 2.3 e Spring Boot 4.1 (Spring MVC, Spring Data JPA e Hibernate)
+- Spring Security (login, logout e CSRF) com senhas em hash BCrypt
 - MySQL (local ou na nuvem)
 - Thymeleaf, HTML e CSS puro (sem framework de CSS)
-- Gradle, JUnit (testes da lógica de gamificação) e GitHub Actions
+- Gradle, JUnit (testes da gamificação e da validação do cadastro) e GitHub Actions
 - Docker, hospedado no Render, com banco MySQL na Aiven
 
 ## Como rodar na sua máquina
@@ -84,22 +86,34 @@ As regras ficam em `Gamificacao.kt` e são **calculadas na hora**, a partir dos 
 - Nível = XP total ÷ 100 + 1
 - Sequência: conta os dias seguidos para trás, a partir de hoje (ou de ontem, se hoje ainda não foi feito, para não "perder" a sequência antes do fim do dia)
 
+## Contas e segurança
+
+- **Cadastro** em `/registrar`: o nome de usuário tem de 3 a 30 caracteres, é único e a senha tem de 6 a 72 caracteres (o limite do BCrypt é de 72 bytes).
+- **Senha nunca é guardada**: o banco só tem o hash BCrypt. No login, o Spring Security gera o hash da senha digitada do mesmo jeito e compara com o guardado.
+- **Login obrigatório:** só `/login` e `/registrar` são públicos.
+- **CSRF:** os formulários levam um token, e o logout é um POST.
+- **Cada pessoa só vê o que é seu:** check-in e exclusão buscam o hábito pelo id **e pelo dono**. Se o hábito for de outra pessoa, a resposta é 404, então não dá para mexer no hábito alheio trocando o número na URL.
+- O cadastro de hábito recebe só o nome, então ninguém consegue definir o id ou o dono pelo formulário.
+
 ## Estrutura
 
 ```
 src/main/kotlin/com/TodoListKotlin/TodoList/
-  model/          Habito e CheckIn (entidades JPA)
-  repository/     HabitoRepository e CheckInRepository
-  controller/     HabitoController (telas e ações)
+  model/          Usuario, Habito e CheckIn (entidades JPA)
+  repository/     UsuarioRepository, HabitoRepository e CheckInRepository
+  controller/     HabitoController, RegistroController e LoginController
+  config/         SecurityConfig (acesso, login, logout, CSRF, BCrypt)
+  service/        UsuarioDetailsService (carrega o usuário do banco no login)
+  validacao/      ValidacaoCadastro (regras de nome e senha)
   gamificacao/    Gamificacao (XP, nível, sequência, conquistas)
-src/main/resources/templates/tasks.html   tela única (HTML, CSS e o Fito em SVG)
-src/test/                                  testes da gamificação
+src/main/resources/templates/              tasks.html (tela principal, com o Fito em SVG), login.html e registrar.html
+src/test/                                  testes da gamificação e da validação do cadastro
 Dockerfile                                 build em dois estágios para o deploy
 ```
 
 ## Próximos passos
 
-- Tela de login, para cada pessoa ter os seus próprios hábitos
+- Recuperar senha e trocar a senha
 - Renomear o pacote e o template para refletir o nome Habitu
 
 ## Autor
