@@ -23,6 +23,13 @@ class Habito(
     var nome: String = "",
 
     /**
+     * Dono do hábito. Cada usuário só enxerga e mexe nos próprios hábitos.
+     */
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    var usuario: Usuario? = null,
+
+    /**
      * Data de criação do hábito.
      */
     var criadoEm: LocalDate = LocalDate.now()

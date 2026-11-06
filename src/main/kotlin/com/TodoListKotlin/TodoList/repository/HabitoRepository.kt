@@ -9,4 +9,11 @@ import org.springframework.stereotype.Repository
  * JpaRepository<Habito, Long> fornece save(), findAll(), findById() e deleteById().
  */
 @Repository
-interface HabitoRepository : JpaRepository<Habito, Long>
+interface HabitoRepository : JpaRepository<Habito, Long> {
+    fun findAllByUsuarioUsername(username: String): List<Habito>
+
+    /**
+     * Busca o hábito só se ele for do usuário informado (evita mexer no hábito de outra pessoa pelo id na URL).
+     */
+    fun findByIdAndUsuarioUsername(id: Long, username: String): Habito?
+}
